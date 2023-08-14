@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class CubeSide(Enum):
+class CubeSide(IntEnum):
     TOP = 0
     LEFT = 1
     FRONT = 2

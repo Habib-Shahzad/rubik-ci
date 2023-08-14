@@ -1,7 +1,5 @@
-import matplotlib.pyplot as plt
-import numpy as np
-from src import RubiksCube, Color
-
+from src import RubiksCube
 
 cube = RubiksCube()
+cube.scramble()
 cube.show()
