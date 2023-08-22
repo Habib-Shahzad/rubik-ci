@@ -1,23 +1,32 @@
 import numpy as np
 from ..enums import *
-from ..constants import COLORS
+from ..constants import COLORS, POSSIBLE_MOVES
 
 
 class RubiksCube:
-    def __init__(self) -> None:
-        self.cube = {face: np.zeros((3, 3)) for face in CubeSide}
-        self.initialize()
+    def __init__(self, cube=None) -> None:
+        if cube is None:
+            self.cube = {face: np.zeros((3, 3)) for face in CubeSide}
+            self.initialize()
+        else:
+            self.cube = {
+                face: np.array(cube[face]) for face in CubeSide
+            }
 
     def initialize(self):
         face_keys = list(self.cube.keys())
         for index, color in enumerate(COLORS):
             self.cube[face_keys[index]] = np.full((3, 3), color)
 
+    def scramble_moves(self, moves=[]):
+        for move in moves:
+            self.twist(move)
+
     def scramble(self, n=40):
-        moves = ['F', 'R', 'U', 'B', 'L', 'D',
-                 "F'", "R'", "U'", "B'", "L'", "D'"]
+        moves = POSSIBLE_MOVES
         for _ in range(n):
-            self.twist(np.random.choice(moves))
+            move = np.random.choice(moves)
+            self.twist(move)
 
     def twist(self, move: str):
         if move == 'F':
@@ -85,6 +94,17 @@ class RubiksCube:
 
 # ------------------- Moves -------------------#
 # F R U B L D F' R' U' B' L' D'
+
+
+    @staticmethod
+    def get_moves_complement(moves):
+        complement = []
+        for move in moves:
+            if move[-1] == "'":
+                complement.append(move[:-1])
+            else:
+                complement.append(move + "'")
+        return list(reversed(complement))
 
     def flip_face_vertical(self, side: CubeSide, axis=0):
         self.cube[side] = np.transpose(self.cube[side])
